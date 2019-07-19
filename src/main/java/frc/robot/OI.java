@@ -20,7 +20,7 @@ public class OI {
         if (Math.abs(ret) < 0.05) {
             return 0.0;
         } else {
-            return ret * 5.0;
+            return ret * 12.0;
         }
     }
 }

@@ -22,7 +22,15 @@ public interface SwerveModule {
 
     /**
      * Gets the azimuth of the module.
+     * @return The azimuth of the module in degrees
      */
     public double getAzimuth();
+
+    /**
+     * Gets the angular speed of the module's azimuth.
+     * 
+     * @return the angular speed of the module in degrees per second
+     */
+    public double getAzimuthVelocity();
 
 }

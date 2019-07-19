@@ -32,7 +32,7 @@ public class MK2SwerveModule implements SwerveModule {
     // Conversions from the Spark Max's native units of revolutions and rpm to degrees
     // and degrees/second
     private static final double AZIMUTH_POSITION_CONVERSION = 360. / 18. ;
-    private static final double AZIMUTH_VELOCITY_CONVERSION = WHEEL_POSITION_CONVERSION / 60;
+    private static final double AZIMUTH_VELOCITY_CONVERSION = AZIMUTH_POSITION_CONVERSION / 60;
 
     // Conversion from the absolute encoder's voltage output to degrees
     private static final double AZIMUTE_ABSOLUTE_SENSOR_CONVERSION = 360. / 5.;
@@ -109,7 +109,7 @@ public class MK2SwerveModule implements SwerveModule {
         wheelSpeedPID.setReference(wheelSpeed, ControlType.kVelocity);
 
         // Set the azimuth
-        azimuthPID.setReference(azimuth, ControlType.kPosition);
+        azimuthPID.setReference(azimuth, ControlType.kSmartMotion);
                 
     }
 
@@ -124,6 +124,27 @@ public class MK2SwerveModule implements SwerveModule {
                 * AZIMUTE_ABSOLUTE_SENSOR_CONVERSION + azimuthOffset;
 
         return (rawAngle + 180) % 360 - 180;
+    }
+
+    @Override
+    public double getAzimuthVelocity() {
+        return azimuthEncoder.getVelocity()
+;    }
+
+    /**
+     * Sets the azimuth tracked by the encoder (used for PID) using the absolute encoder.
+     */
+    public void calibrateAzimuth() {
+        azimuthEncoder.setPosition(getAzimuth());
+    }
+
+    /**
+     * Sets the azimuth to the given velocity. Mainly used for tuning the PID.
+     * 
+     * @param velocity The angular velocity to set in degrees per second
+     */
+    public void setAngularVelocity(double velocity) {
+        azimuthPID.setReference(velocity, ControlType.kVelocity);
     }
 
 
