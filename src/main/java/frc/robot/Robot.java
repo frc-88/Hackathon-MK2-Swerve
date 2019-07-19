@@ -23,8 +23,6 @@ import frc.robot.swervemodule.MK2SwerveModule;
  * project.
  */
 public class Robot extends IterativeRobot {
-
-
   private static final int FRONT_RIGHT_WHEEL_MOTOR_ID = 1;
   private static final int FRONT_RIGHT_AZIMUTH_MOTOR_ID = 16;
   private static final int FRONT_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID = 0;
@@ -53,20 +51,26 @@ public class Robot extends IterativeRobot {
 
   AHRS navX;
 
+  public static OI oi;
+
   /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
    */
   @Override
   public void robotInit() {
 
-    frontRightModule = new MK2SwerveModule(FRONT_RIGHT_WHEEL_MOTOR_ID, FRONT_RIGHT_AZIMUTH_MOTOR_ID, FRONT_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID);
+    frontRightModule = new MK2SwerveModule(FRONT_RIGHT_WHEEL_MOTOR_ID, FRONT_RIGHT_AZIMUTH_MOTOR_ID,
+        FRONT_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID);
     frontRightModule.setAzimuthOffset(FRONT_RIGHT_AZIMUTH_OFFSET);
-    frontLeftModule = new MK2SwerveModule(FRONT_LEFT_WHEEL_MOTOR_ID, FRONT_LEFT_AZIMUTH_MOTOR_ID, FRONT_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID);
+    frontLeftModule = new MK2SwerveModule(FRONT_LEFT_WHEEL_MOTOR_ID, FRONT_LEFT_AZIMUTH_MOTOR_ID,
+        FRONT_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID);
     frontLeftModule.setAzimuthOffset(FRONT_LEFT_AZIMUTH_OFFSET);
-    backLeftModule = new MK2SwerveModule(BACK_LEFT_WHEEL_MOTOR_ID, BACK_LEFT_AZIMUTH_MOTOR_ID, BACK_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID);
+    backLeftModule = new MK2SwerveModule(BACK_LEFT_WHEEL_MOTOR_ID, BACK_LEFT_AZIMUTH_MOTOR_ID,
+        BACK_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID);
     backLeftModule.setAzimuthOffset(BACK_LEFT_AZIMUTH_OFFSET);
-    backRightModule = new MK2SwerveModule(BACK_RIGHT_WHEEL_MOTOR_ID, BACK_RIGHT_AZIMUTH_MOTOR_ID, BACK_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID);
+    backRightModule = new MK2SwerveModule(BACK_RIGHT_WHEEL_MOTOR_ID, BACK_RIGHT_AZIMUTH_MOTOR_ID,
+        BACK_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID);
     backRightModule.setAzimuthOffset(BACK_RIGHT_AZIMUTH_OFFSET);
 
     navX = new AHRS(Port.kOnboard);
@@ -83,12 +87,13 @@ public class Robot extends IterativeRobot {
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use
-   * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for
+   * items like diagnostics that you want ran during disabled, autonomous,
+   * teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
@@ -108,14 +113,15 @@ public class Robot extends IterativeRobot {
 
   /**
    * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
-   * chooser code works with the Java SmartDashboard. If you prefer the
-   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-   * getString line to get the auto name from the text box below the Gyro
+   * between different autonomous modes using the dashboard. The sendable chooser
+   * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
+   * remove all of the chooser code and uncomment the getString line to get the
+   * auto name from the text box below the Gyro
    *
-   * <p>You can add additional auto modes by adding additional comparisons to
-   * the switch structure below with additional strings. If using the
-   * SendableChooser make sure to add them to the chooser code above as well.
+   * <p>
+   * You can add additional auto modes by adding additional comparisons to the
+   * switch structure below with additional strings. If using the SendableChooser
+   * make sure to add them to the chooser code above as well.
    */
   @Override
   public void autonomousInit() {
@@ -134,14 +140,23 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void teleopPeriodic() {
-    frontRightModule.set(SmartDashboard.getNumber("C Front Right Wheel Speed", 0), 
-        SmartDashboard.getNumber("C Front Right Azimuth", 0));
-    frontLeftModule.set(SmartDashboard.getNumber("C Front Left Wheel Speed", 0), 
-        SmartDashboard.getNumber("C Front Left Azimuth", 0));
-    backLeftModule.set(SmartDashboard.getNumber("C Back Left Wheel Speed", 0), 
-        SmartDashboard.getNumber("C Back Left Azimuth", 0));
-    backRightModule.set(SmartDashboard.getNumber("C Back Right Wheel Speed", 0), 
-        SmartDashboard.getNumber("C Back Left Azimuth", 0));
+    // frontRightModule.set(SmartDashboard.getNumber("C Front Right Wheel Speed",
+    // 0),
+    // SmartDashboard.getNumber("C Front Right Azimuth", 0));
+    // frontLeftModule.set(SmartDashboard.getNumber("C Front Left Wheel Speed", 0),
+    // SmartDashboard.getNumber("C Front Left Azimuth", 0));
+    // backLeftModule.set(SmartDashboard.getNumber("C Back Left Wheel Speed", 0),
+    // SmartDashboard.getNumber("C Back Left Azimuth", 0));
+    // backRightModule.set(SmartDashboard.getNumber("C Back Right Wheel Speed", 0),
+    // SmartDashboard.getNumber("C Back Left Azimuth", 0));
+
+    var speed = oi.getSpeed();
+    var azimuth = oi.getAzimuth();
+
+    frontRightModule.set(speed, azimuth);
+    frontLeftModule.set(speed, azimuth);
+    backRightModule.set(speed, azimuth);
+    backLeftModule.set(speed, azimuth);
   }
 
   /**
