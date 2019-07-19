@@ -1,5 +1,8 @@
 package frc.robot.swervemodule;
 
+/**
+ * Interface for setting and getting the physical attributes of a single swerve module.
+ */
 public interface SwerveModule {
 
     /**

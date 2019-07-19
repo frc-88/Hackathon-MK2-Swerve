@@ -9,34 +9,45 @@ import com.revrobotics.CANSparkMaxLowLevel.ConfigParameter;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import frc.robot.Constants;
 
+/**
+ * Encapsulates the hardware interface for an MK2 Swerve Module.
+ */
 public class MK2SwerveModule implements SwerveModule {
 
+    /**
+     * Constants relating to the wheel speed controls of the module
+     */
+
+    // Conversions from the Spark Max's native units of revolutions and rpm to feet and feet/second
     private static final double WHEEL_POSITION_CONVERSION = ((4. / 12.) * Math.PI) / 8.33;
     private static final double WHEEL_VELOCITY_CONVERSION = WHEEL_POSITION_CONVERSION / 60;
 
-    private static final double WHEEL_KP = 0; 
-    private static final double WHEEL_KI = 0.0001;
-    private static final double WHEEL_KD = 0;
-    private static final double WHEEL_KF = .08;
-    private static final double WHEEL_IZONE = 2;
-    private static final double WHEEL_IMAX = .2;
 
+    /**
+     * Constants relating to the azimuth controls of the module.
+     */
+
+    // Conversions from the Spark Max's native units of revolutions and rpm to degrees
+    // and degrees/second
     private static final double AZIMUTH_POSITION_CONVERSION = 360. / 18. ;
     private static final double AZIMUTH_VELOCITY_CONVERSION = WHEEL_POSITION_CONVERSION / 60;
 
-    private static final double AZIMUTH_KP = 0.0002; 
-    private static final double AZIMUTH_KI = 0;
-    private static final double AZIMUTH_KD = 0;
-
+    // Conversion from the absolute encoder's voltage output to degrees
     private static final double AZIMUTE_ABSOLUTE_SENSOR_CONVERSION = 360. / 5.;
 
+
+
+    // Hardware device objects
     private CANSparkMax wheelMotor;
     private CANEncoder wheelEncoder;
     private CANSparkMax azimuthMotor;
     private CANEncoder azimuthEncoder;
     private AnalogInput azimuthAbsoluteSensor;
 
+
+    // PID
     private CANPIDController wheelSpeedPID;
     private CANPIDController azimuthPID;
 
@@ -52,12 +63,12 @@ public class MK2SwerveModule implements SwerveModule {
         wheelEncoder.setPositionConversionFactor(WHEEL_POSITION_CONVERSION);
         wheelEncoder.setVelocityConversionFactor(WHEEL_VELOCITY_CONVERSION);
         wheelSpeedPID = wheelMotor.getPIDController();
-        wheelSpeedPID.setP(WHEEL_KP);
-        wheelSpeedPID.setI(WHEEL_KI);
-        wheelSpeedPID.setD(WHEEL_KD);
-        wheelSpeedPID.setFF(WHEEL_KF);
-        wheelSpeedPID.setIZone(WHEEL_IZONE);
-        wheelSpeedPID.setIAccum(WHEEL_IMAX);
+        wheelSpeedPID.setP(Constants.mk2WheelKP);
+        wheelSpeedPID.setI(Constants.mk2WheelKI);
+        wheelSpeedPID.setD(Constants.mk2WheelKD);
+        wheelSpeedPID.setFF(Constants.mk2WheelKF);
+        wheelSpeedPID.setIZone(Constants.mk2WheelIZone);
+        wheelSpeedPID.setIAccum(Constants.mk2WheelIMax);
 
         // Set up azimute motor
         azimuthMotor = new CANSparkMax(azimuthMotorId, MotorType.kBrushless);
@@ -67,9 +78,15 @@ public class MK2SwerveModule implements SwerveModule {
         azimuthEncoder.setPositionConversionFactor(AZIMUTH_POSITION_CONVERSION);
         azimuthEncoder.setVelocityConversionFactor(AZIMUTH_VELOCITY_CONVERSION);
         azimuthPID = azimuthMotor.getPIDController();
-        azimuthPID.setP(AZIMUTH_KP);
-        azimuthPID.setI(AZIMUTH_KI);
-        azimuthPID.setD(AZIMUTH_KD);
+        azimuthPID.setP(Constants.mk2AzimuthKP);
+        azimuthPID.setI(Constants.mk2AzimuthKI);
+        azimuthPID.setD(Constants.mk2AzimuthKD);
+        azimuthPID.setFF(Constants.mk2AzimuthKF);
+        azimuthPID.setIZone(Constants.mk2AzimuthIZone);
+        azimuthPID.setIAccum(Constants.mk2AzimuthIMax);
+        azimuthPID.setSmartMotionMaxVelocity(Constants.mk2AzimuthMaxVelocity, 0);
+        azimuthPID.setSmartMotionMinOutputVelocity(Constants.mk2AzimuthMinVelocity, 0);
+        azimuthPID.setSmartMotionMaxAccel(Constants.mk2AzimuthMaxAcceleration, 0);
 
         // Set up azimuth absolute encoder
         azimuthAbsoluteSensor = new AnalogInput(azimuthAbsoluteSensorId);
@@ -90,9 +107,6 @@ public class MK2SwerveModule implements SwerveModule {
 
         // Set the wheel speed
         wheelSpeedPID.setReference(wheelSpeed, ControlType.kVelocity);
-        
-        // Calibrate the azimuth encoder
-        azimuthEncoder.setPosition(getAzimuth());
 
         // Set the azimuth
         azimuthPID.setReference(azimuth, ControlType.kPosition);
