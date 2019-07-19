@@ -11,16 +11,10 @@ public class OI {
     }
 
     public double getAzimuth() {
-        double ret = controller.getRawAxis(0);
-        return 180 + (ret * 180);
+        return controller.getDirectionDegrees();
     }
 
     public double getSpeed() {
-        double ret = controller.getRawAxis(5);
-        if (Math.abs(ret) < 0.05) {
-            return 0.0;
-        } else {
-            return ret * 12.0;
-        }
+        return Math.pow(controller.getMagnitude(), 3) * 12;
     }
 }

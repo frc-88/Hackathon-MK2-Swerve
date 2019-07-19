@@ -72,8 +72,10 @@ public class MK2SwerveModule implements SwerveModule {
 
         // Set up azimute motor
         azimuthMotor = new CANSparkMax(azimuthMotorId, MotorType.kBrushless);
+        azimuthMotor.setInverted(true);
         azimuthMotor.setIdleMode(IdleMode.kBrake);
         azimuthMotor.setParameter(ConfigParameter.kInputDeadband, 0.1);
+        azimuthMotor.setClosedLoopRampRate(Constants.mk2AzimuthRamp);
         azimuthEncoder = azimuthMotor.getEncoder();
         azimuthEncoder.setPositionConversionFactor(AZIMUTH_POSITION_CONVERSION);
         azimuthEncoder.setVelocityConversionFactor(AZIMUTH_VELOCITY_CONVERSION);
@@ -81,12 +83,6 @@ public class MK2SwerveModule implements SwerveModule {
         azimuthPID.setP(Constants.mk2AzimuthKP);
         azimuthPID.setI(Constants.mk2AzimuthKI);
         azimuthPID.setD(Constants.mk2AzimuthKD);
-        azimuthPID.setFF(Constants.mk2AzimuthKF);
-        azimuthPID.setIZone(Constants.mk2AzimuthIZone);
-        azimuthPID.setIAccum(Constants.mk2AzimuthIMax);
-        azimuthPID.setSmartMotionMaxVelocity(Constants.mk2AzimuthMaxVelocity, 0);
-        azimuthPID.setSmartMotionMinOutputVelocity(Constants.mk2AzimuthMinVelocity, 0);
-        azimuthPID.setSmartMotionMaxAccel(Constants.mk2AzimuthMaxAcceleration, 0);
 
         // Set up azimuth absolute encoder
         azimuthAbsoluteSensor = new AnalogInput(azimuthAbsoluteSensorId);
@@ -109,7 +105,7 @@ public class MK2SwerveModule implements SwerveModule {
         wheelSpeedPID.setReference(wheelSpeed, ControlType.kVelocity);
 
         // Set the azimuth
-        azimuthPID.setReference(azimuth, ControlType.kSmartMotion);
+        azimuthPID.setReference(azimuth, ControlType.kPosition);
                 
     }
 

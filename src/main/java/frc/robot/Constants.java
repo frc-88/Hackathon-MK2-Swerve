@@ -23,6 +23,8 @@ public class Constants {
     public static double mk2WheelIZone = 2;
     private static String name_mk2WheelIMax = "MK2 Wheel IMax";
     public static double mk2WheelIMax = .2;
+    private static String name_mk2WheelRamp = "MK2 Wheel Ramp";
+    public static double mk2WheelRamp = .05;
 
     // PID constants for the MK2 azimuth controller using the Spark Max's "Smart Motion" 
     // trapezoidal motion profiling
@@ -30,21 +32,11 @@ public class Constants {
     private static String name_mk2AzimuthKP = "MK2 Azimuth kP";
     public static double mk2AzimuthKP = 0.001; 
     private static String name_mk2AzimuthKI = "MK2 Azimuth kI";
-    public static double mk2AzimuthKI = 0.000001;
+    public static double mk2AzimuthKI = 0.00000;
     private static String name_mk2AzimuthKD = "MK2 Azimuth kD";
     public static double mk2AzimuthKD = 0;
-    private static String name_mk2AzimuthKF = "MK2 Azimuth kF";
-    public static double mk2AzimuthKF = 0.00053;
-    private static String name_mk2AzimuthIZone = "MK2 Azimuth IZone";
-    public static double mk2AzimuthIZone = 250;
-    private static String name_mk2AzimuthIMax = "MK2 Azimuth IMax";
-    public static double mk2AzimuthIMax = 50;
-    private static String name_mk2AzimuthMaxVelocity = "MK2 Azimuth Max Vel";
-    public static double mk2AzimuthMaxVelocity = 1800;
-    private static String name_mk2AzimuthMinVelocity = "MK2 Azimuth Min Vel";
-    public static double mk2AzimuthMinVelocity = 0;
-    private static String name_mk2AzimuthMaxAcceleration = "MK2 Azimuth Max Accel";
-    public static double mk2AzimuthMaxAcceleration = 5000;
+    private static String name_mk2AzimuthRamp = "MK2 Azimuth Ramp";
+    public static double mk2AzimuthRamp = 0;
 
     // Initialize all of the preferences
     public static void init() {
@@ -54,16 +46,12 @@ public class Constants {
         initializeDoublePreference(name_mk2WheelKF, mk2WheelKF);
         initializeDoublePreference(name_mk2WheelIZone, mk2WheelIZone);
         initializeDoublePreference(name_mk2WheelIMax, mk2WheelIMax);
+        initializeDoublePreference(name_mk2WheelRamp, mk2WheelRamp);
 
         initializeDoublePreference(name_mk2AzimuthKP, mk2AzimuthKP);
         initializeDoublePreference(name_mk2AzimuthKI, mk2AzimuthKI);
         initializeDoublePreference(name_mk2AzimuthKD, mk2AzimuthKD);
-        initializeDoublePreference(name_mk2AzimuthKF, mk2AzimuthKF);
-        initializeDoublePreference(name_mk2AzimuthIZone, mk2AzimuthIZone);
-        initializeDoublePreference(name_mk2AzimuthIMax, mk2AzimuthIMax);
-        initializeDoublePreference(name_mk2AzimuthMaxVelocity, mk2AzimuthMaxVelocity);
-        initializeDoublePreference(name_mk2AzimuthMinVelocity, mk2AzimuthMinVelocity);
-        initializeDoublePreference(name_mk2AzimuthMaxAcceleration, mk2AzimuthMaxAcceleration);
+        initializeDoublePreference(name_mk2AzimuthRamp, mk2AzimuthRamp);
     }
 
     public static void updatePreferences() {
@@ -73,16 +61,12 @@ public class Constants {
         mk2WheelKF = updateDoublePreference(name_mk2WheelKF, mk2WheelKF);
         mk2WheelIZone = updateDoublePreference(name_mk2WheelIZone, mk2WheelIZone);
         mk2WheelIMax = updateDoublePreference(name_mk2WheelIMax, mk2WheelIMax);
+        mk2WheelRamp = updateDoublePreference(name_mk2WheelRamp, mk2WheelRamp);
 
         mk2AzimuthKP = updateDoublePreference(name_mk2AzimuthKP, mk2AzimuthKP);
         mk2AzimuthKI = updateDoublePreference(name_mk2AzimuthKI, mk2AzimuthKI);
         mk2AzimuthKD = updateDoublePreference(name_mk2AzimuthKD, mk2AzimuthKD);
-        mk2AzimuthKF = updateDoublePreference(name_mk2AzimuthKF, mk2AzimuthKF);
-        mk2AzimuthIZone = updateDoublePreference(name_mk2AzimuthIZone, mk2AzimuthIZone);
-        mk2AzimuthIMax = updateDoublePreference(name_mk2AzimuthIMax, mk2AzimuthIMax);
-        mk2AzimuthMaxVelocity = updateDoublePreference(name_mk2AzimuthMaxVelocity, mk2AzimuthMaxVelocity);
-        mk2AzimuthMinVelocity = updateDoublePreference(name_mk2AzimuthMinVelocity, mk2AzimuthMinVelocity);
-        mk2AzimuthMaxAcceleration = updateDoublePreference(name_mk2AzimuthMaxAcceleration, mk2AzimuthMaxAcceleration);
+        mk2AzimuthRamp = updateDoublePreference(name_mk2AzimuthRamp, mk2AzimuthRamp);
     }
 
     private static void initializeDoublePreference(String name, double defaultValue) {

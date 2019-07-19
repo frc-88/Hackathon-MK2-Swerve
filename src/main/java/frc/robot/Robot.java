@@ -39,10 +39,10 @@ public class Robot extends IterativeRobot {
   private static final int BACK_RIGHT_AZIMUTH_MOTOR_ID = 14;
   private static final int BACK_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID = 3;
 
-  private static final double FRONT_RIGHT_AZIMUTH_OFFSET = 1.7;
-  private static final double FRONT_LEFT_AZIMUTH_OFFSET = 0.4;
-  private static final double BACK_LEFT_AZIMUTH_OFFSET = -5.2;
-  private static final double BACK_RIGHT_AZIMUTH_OFFSET = 2.0;
+  private static final double FRONT_RIGHT_AZIMUTH_OFFSET = -178.3;
+  private static final double FRONT_LEFT_AZIMUTH_OFFSET = -179.6;
+  private static final double BACK_LEFT_AZIMUTH_OFFSET = 174.8;
+  private static final double BACK_RIGHT_AZIMUTH_OFFSET = -178.0;
 
   MK2SwerveModule frontRightModule;
   MK2SwerveModule frontLeftModule;
@@ -107,6 +107,15 @@ public class Robot extends IterativeRobot {
     SmartDashboard.putNumber("BackLeftAzimuthVel", backLeftModule.getAzimuthVelocity());
     SmartDashboard.putNumber("BackRightAzimuthVel", backRightModule.getAzimuthVelocity());
 
+    SmartDashboard.putNumber("Front Right Speed", frontRightModule.getSpeed());
+    SmartDashboard.putNumber("Front Right Azimuth", frontRightModule.getAzimuth());
+    SmartDashboard.putNumber("Front Left Speed", frontLeftModule.getSpeed());
+    SmartDashboard.putNumber("Front Left Azimuth", frontLeftModule.getAzimuth());
+    SmartDashboard.putNumber("Back Left Speed", backLeftModule.getSpeed());
+    SmartDashboard.putNumber("Back Left Azimuth", backLeftModule.getAzimuth());
+    SmartDashboard.putNumber("Back Right Speed", backRightModule.getSpeed());
+    SmartDashboard.putNumber("Back Right Azimuth", backRightModule.getAzimuth());
+
     SmartDashboard.putNumber("NavX Yaw", -navX.getYaw());
 
   }
@@ -150,7 +159,7 @@ public class Robot extends IterativeRobot {
   public void teleopPeriodic() {
 
     if (SmartDashboard.getBoolean("EnableAzimuthVelocityMode", false)) {
-      
+
       frontRightModule.setAngularVelocity(SmartDashboard.getNumber("CommandFrontRightAzimuthVel", 0));
       frontLeftModule.setAngularVelocity(SmartDashboard.getNumber("CommandFrontLeftAzimuthVel", 0));
       backLeftModule.setAngularVelocity(SmartDashboard.getNumber("CommandBackLeftAzimuthVel", 0));
