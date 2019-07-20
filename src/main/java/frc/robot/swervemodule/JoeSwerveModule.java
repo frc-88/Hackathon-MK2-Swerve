@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.ConfigParameter;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants;
+import frc.robot.util.MathUtils;
 import frc.robot.util.TJPIDController;
 
 public class JoeSwerveModule implements SwerveModule {
@@ -23,6 +24,9 @@ public class JoeSwerveModule implements SwerveModule {
     private CANPIDController speedPidB;
     CANifier canifier;
 
+    private double previousRawAzimuth;
+    private double fullRotations = 0;
+
     TJPIDController azimuthPid;
 
     /** Azimuth encoder value when the module is pointing forwards, [0-1) */
@@ -32,7 +36,8 @@ public class JoeSwerveModule implements SwerveModule {
     public JoeSwerveModule(int motorAId, int motorBId, CANifier canifier, PWMChannel azimuthAbsoluteEncoder) {
         this.canifier = canifier;
         this.azimuthAbsoluteEncoder = azimuthAbsoluteEncoder;
-        azimuthPid = new TJPIDController(200, 0, 0);
+        previousRawAzimuth = getRawAzimuth();
+        azimuthPid = new TJPIDController(0.5, 0, 0);
 
         // Set up motor A
         motorA = new CANSparkMax(motorAId, MotorType.kBrushless);
@@ -40,6 +45,7 @@ public class JoeSwerveModule implements SwerveModule {
         motorA.setParameter(ConfigParameter.kInputDeadband, 0.1);
         encoderA = motorA.getEncoder();
         speedPidA = motorA.getPIDController();
+        motorA.setParameter(ConfigParameter.kClosedLoopRampRate, 0);
 
         // Set up motor B
         motorB = new CANSparkMax(motorBId, MotorType.kBrushless);
@@ -47,6 +53,7 @@ public class JoeSwerveModule implements SwerveModule {
         motorB.setParameter(ConfigParameter.kInputDeadband, 0.1);
         encoderB = motorB.getEncoder();
         speedPidB = motorB.getPIDController();
+        motorB.setParameter(ConfigParameter.kClosedLoopRampRate, 0);
     }
 
     public void configureFromPreferences() {
@@ -69,9 +76,23 @@ public class JoeSwerveModule implements SwerveModule {
 
     @Override
     public void set(double wheelSpeed, double azimuth) {
-        double azimuthVel = azimuthPid.calculateOutput(getAzimuth(), azimuth);
+
+        double currentAzimuth = getAzimuth();
+        double targetAzimuth = azimuth;
+
+        while (targetAzimuth - currentAzimuth > 180) {
+            targetAzimuth -= 360;
+        }
+
+        while (targetAzimuth - currentAzimuth < -180) {
+            targetAzimuth += 360;
+        }
+
+        double azimuthVel = azimuthPid.calculateOutput(currentAzimuth, targetAzimuth);
+
         double velocityB = 3.33 * wheelSpeed - 33.3 * azimuthVel;
         double velocityA = 66.6 * azimuthVel + velocityB;
+
         setMotors(velocityA, velocityB);
     }
 
@@ -80,8 +101,10 @@ public class JoeSwerveModule implements SwerveModule {
         return wheelVelocityFromMotors(getMotorAVelocity(), getMotorBVelocity());
     }
 
-    @Override
-    public double getAzimuth() {
+    /**
+     * @return Absolute azimuth angle in degrees in [-180, 180)
+     */
+    private double getRawAzimuth() {
         double[] pwmIn = new double[2];
         canifier.getPWMInput(azimuthAbsoluteEncoder, pwmIn);
         double azimuth = pwmIn[0] / pwmIn[1];
@@ -92,7 +115,26 @@ public class JoeSwerveModule implements SwerveModule {
         while (azimuth >= 1.0) {
             azimuth -= 1;
         }
-        return 1 - azimuth;
+        return (1 - azimuth) * 360 - 180;
+    }
+
+    /**
+     * @return Absolute azimuth angle in degrees without bounds
+     */
+    @Override
+    public double getAzimuth() {
+        double rawAzimuth = getRawAzimuth();
+
+        // Detect a full rotation based on wraparound
+        double rawAzimuthDelta = (previousRawAzimuth + 180) - (rawAzimuth + 180);
+        if (rawAzimuthDelta > 270) {
+            fullRotations += 1;
+        } else if (rawAzimuthDelta < -270) {
+            fullRotations -= 1;
+        }
+
+        previousRawAzimuth = rawAzimuth;
+        return fullRotations * 360 + rawAzimuth;
     }
 
     @Override

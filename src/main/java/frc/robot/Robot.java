@@ -161,19 +161,6 @@ public class Robot extends IterativeRobot {
     var speed = oi.getSpeed();
     var azimuth = oi.getAzimuth();
 
-    // if (oi.motorAActive()) {
-    // frontRightModule.set(speed, azimuth);
-    // }
-    // if (oi.motorBActive()) {
-    // frontLeftModule.set(speed, azimuth);
-    // }
-    // if (oi.motorCActive()) {
-    // backRightModule.set(speed, azimuth);
-    // }
-    // if (oi.motorDActive()) {
-    // backLeftModule.set(speed, azimuth);
-    // }
-
     frontRightModule.set(speed, azimuth);
     frontLeftModule.set(speed, azimuth);
     backRightModule.set(speed, azimuth);
