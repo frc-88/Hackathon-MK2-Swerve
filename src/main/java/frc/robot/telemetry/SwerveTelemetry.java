@@ -45,13 +45,15 @@ public class SwerveTelemetry {
     }
 
     public void setPosition(double x, double y) {
-        // TODO: Shift currentState
+        this.currentState = new FullSwerveState(Vector2D.createCartesianCoordinates(x, y), 
+            this.currentState.getHeading(), this.currentState.getTranslationVelocity(), 
+            this.currentState.getRotationalVelocity());
     }
 
     public void updateState(Vector2D frontRightVelocity, Vector2D frontLeftVelocity,
             Vector2D backLeftVelocity, Vector2D backRightVelocity) {
 
-        // TODO: Odometry calculation
+        
 
     }
 

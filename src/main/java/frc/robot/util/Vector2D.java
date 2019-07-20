@@ -42,4 +42,11 @@ public class Vector2D {
         return createPolarCoordinates(this.getMagnitude(), this.getAngle() + angle);
     }
 
+    public static Vector2D findIntersection(Vector2D v1Start, Vector2D v1End, Vector2D v2Start, Vector2D v2End) {
+
+         
+
+        return ORIGIN;
+    }
+
 }
