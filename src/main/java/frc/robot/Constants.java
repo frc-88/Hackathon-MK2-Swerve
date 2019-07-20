@@ -3,16 +3,16 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Preferences;
 
 /**
- * This class contains many of the constants for the robot. Mainly, those values which should go
- * here are either ones which are relevant in a global scope or ones that will be registered as a
- * WPILIB preference.
+ * This class contains many of the constants for the robot. Mainly, those values
+ * which should go here are either ones which are relevant in a global scope or
+ * ones that will be registered as a WPILIB preference.
  */
 public class Constants {
 
     // PID constants for the MK2 wheel speed controller running on the Spark Max
     // Configured through Preferences
     private static String name_mk2WheelKP = "MK2 Wheel kP";
-    public static double mk2WheelKP = 0; 
+    public static double mk2WheelKP = 0;
     private static String name_mk2WheelKI = "MK2 Wheel kI";
     public static double mk2WheelKI = 0.0001;
     private static String name_mk2WheelKD = "MK2 Wheel kD";
@@ -26,11 +26,12 @@ public class Constants {
     private static String name_mk2WheelRamp = "MK2 Wheel Ramp";
     public static double mk2WheelRamp = .05;
 
-    // PID constants for the MK2 azimuth controller using the Spark Max's "Smart Motion" 
+    // PID constants for the MK2 azimuth controller using the Spark Max's "Smart
+    // Motion"
     // trapezoidal motion profiling
     // Configured through Preferences
     private static String name_mk2AzimuthKP = "MK2 Azimuth kP";
-    public static double mk2AzimuthKP = 0.001; 
+    public static double mk2AzimuthKP = 0.001;
     private static String name_mk2AzimuthKI = "MK2 Azimuth kI";
     public static double mk2AzimuthKI = 0.00000;
     private static String name_mk2AzimuthKD = "MK2 Azimuth kD";
@@ -45,7 +46,12 @@ public class Constants {
     public static double translationAngularAccelLimit = 180;
     private static String name_headingAngularAccelLimit = "Heading Angular Accel";
     public static double headingAngularAccelLimit = 180;
-    
+
+    // Drivebase parameters
+    /// wheel center-to-center along x-axis in ft
+    public static double drivebaseLength = 2.0625;
+    /// wheel center-to-center along y-axis in ft
+    public static double drivebaseWidth = 1.8125;
 
     // Initialize all of the preferences
     public static void init() {
@@ -82,7 +88,8 @@ public class Constants {
         mk2AzimuthRamp = updateDoublePreference(name_mk2AzimuthRamp, mk2AzimuthRamp);
 
         linearAccelLimit = updateDoublePreference(name_linearAccelLimit, linearAccelLimit);
-        translationAngularAccelLimit = updateDoublePreference(name_translationAngularAccelLimit, translationAngularAccelLimit);
+        translationAngularAccelLimit = updateDoublePreference(name_translationAngularAccelLimit,
+                translationAngularAccelLimit);
         headingAngularAccelLimit = updateDoublePreference(name_headingAngularAccelLimit, headingAngularAccelLimit);
     }
 
