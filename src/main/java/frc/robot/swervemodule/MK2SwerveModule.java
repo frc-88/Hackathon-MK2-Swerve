@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.Constants;
+import frc.robot.util.MathUtils;
 
 /**
  * Encapsulates the hardware interface for an MK2 Swerve Module.
@@ -104,16 +105,14 @@ public class MK2SwerveModule implements SwerveModule {
         // // Set the wheel angle to the closest multiple of 180
         double currentAzimuth = azimuthEncoder.getPosition();
         double targetAzimuth = azimuth % 180;
-        boolean flipSpeed = (Math.abs(azimuth - 180) < .001) || (Math.abs(azimuth + 180) < .001);
         while (Math.abs(targetAzimuth - currentAzimuth) > 90) {
             if (targetAzimuth < currentAzimuth) {
                 targetAzimuth += 180;
             } else {
                 targetAzimuth -= 180;
             }
-            flipSpeed = !flipSpeed;
         }
-        if (flipSpeed) {
+        if (Math.abs(MathUtils.getReferenceAngle(azimuth) - MathUtils.getReferenceAngle(targetAzimuth)) > 90) {
             wheelSpeed = -wheelSpeed;
         }
 
@@ -136,7 +135,7 @@ public class MK2SwerveModule implements SwerveModule {
         double rawAngle = azimuthAbsoluteSensor.getAverageVoltage() 
                 * AZIMUTE_ABSOLUTE_SENSOR_CONVERSION + azimuthOffset;
 
-        return (rawAngle + 180) % 360 - 180;
+        return MathUtils.getReferenceAngle(rawAngle);
     }
 
     @Override
