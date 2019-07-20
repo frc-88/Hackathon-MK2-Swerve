@@ -38,4 +38,8 @@ public class Vector2D {
             magnitude * -Math.sin(angle), magnitude * Math.cos(angle));
     }
 
+    public Vector2D rotate(double angle) {
+        return createPolarCoordinates(this.getMagnitude(), this.getAngle() + angle);
+    }
+
 }

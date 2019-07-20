@@ -20,4 +20,15 @@ public class FullSwerveState extends AbsoluteHeadingSwerveState {
         return this.position;
     }
 
+    public FullSwerveState rotate(double angle) {
+        AbsoluteHeadingSwerveState ahss = super.rotateFrame(angle);
+        return new FullSwerveState(position.rotate(angle), ahss.getHeading(), 
+            ahss.getTranslationVelocity(), ahss.getRotationalVelocity());
+    }
+
+    @Override
+    public <R> R accept(SwerveStateVisitor<R> v) {
+        return v.visitFullSwerveState(this);
+    }
+
 }

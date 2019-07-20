@@ -28,4 +28,8 @@ public class VelocitySwerveState implements SwerveState {
         return this.rotationalVelocity;
     }
 
+    public VelocitySwerveState rotateFrame(double angle) {
+        return new VelocitySwerveState(translationVelocity.rotate(angle), rotationalVelocity);
+    }
+
 }

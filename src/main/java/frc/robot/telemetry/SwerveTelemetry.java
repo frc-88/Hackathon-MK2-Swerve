@@ -14,14 +14,14 @@ public class SwerveTelemetry {
     private AHRS navX;
     private FullSwerveState currentState;
 
-    public void init(Port navXPort) {
+    public static void init(AHRS navX) {
         if (Objects.isNull(instance)) {
-            SwerveTelemetry.instance = new SwerveTelemetry(navXPort);
+            SwerveTelemetry.instance = new SwerveTelemetry(navX);
         }
     }
 
-    private SwerveTelemetry(Port navXPort) {
-        this.navX = new AHRS(navXPort);
+    private SwerveTelemetry(AHRS navX) {
+        this.navX = navX;
         this.currentState = FullSwerveState.ZERO_STATE;
         this.setHeading(0);
     }
@@ -42,11 +42,10 @@ public class SwerveTelemetry {
     public void setHeading(double heading) {
         this.navX.setAngleAdjustment(heading);
         this.navX.zeroYaw();
-        // TODO: Rotate currentState
     }
 
     public void setPosition(double x, double y) {
-        // TODO: Shift curretState
+        // TODO: Shift currentState
     }
 
     public void updateState(Vector2D frontRightVelocity, Vector2D frontLeftVelocity,
@@ -56,7 +55,11 @@ public class SwerveTelemetry {
 
     }
 
-    public FullSwerveState getState() {
+    public FullSwerveState getRobotCentricState() {
         return this.currentState;
+    }
+
+    public FullSwerveState getFieldCentricState() {
+        return this.currentState.rotate(-getIMUHeading());
     }
 }
