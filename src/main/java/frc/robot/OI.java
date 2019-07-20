@@ -11,10 +11,12 @@ public class OI {
     }
 
     public double getAzimuth() {
-        return controller.getDirectionDegrees();
+        // TODO: this scale is completely made up.
+        return controller.getRawAxis(0) * 20;
     }
 
     public double getSpeed() {
-        return Math.pow(controller.getMagnitude(), 3) * 12;
+        // TODO: this scale is completely made up.
+        return controller.getRawAxis(5) * 200;
     }
 }

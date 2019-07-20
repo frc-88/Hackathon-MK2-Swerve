@@ -3,70 +3,76 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Preferences;
 
 /**
- * This class contains many of the constants for the robot. Mainly, those values which should go
- * here are either ones which are relevant in a global scope or ones that will be registered as a
- * WPILIB preference.
+ * This class contains many of the constants for the robot. Mainly, those values
+ * which should go here are either ones which are relevant in a global scope or
+ * ones that will be registered as a WPILIB preference.
  */
 public class Constants {
+    private static String name_motorAKP = "Motor A kP";
+    public static double motorAKP = 0;
+    private static String name_motorAKI = "Motor A kI";
+    public static double motorAKI = 0;
+    private static String name_motorAKD = "Motor A kD";
+    public static double motorAKD = 0;
+    private static String name_motorAKF = "Motor A kF";
+    public static double motorAKF = 0;
+    private static String name_motorAIZone = "Motor A IZone";
+    public static double motorAIZone = 0;
+    private static String name_motorAIMax = "Motor A IMax";
+    public static double motorAIMax = 0;
+    private static String name_motorARamp = "Motor A Ramp";
+    public static double motorARamp = 0;
 
-    // PID constants for the MK2 wheel speed controller running on the Spark Max
-    // Configured through Preferences
-    private static String name_mk2WheelKP = "MK2 Wheel kP";
-    public static double mk2WheelKP = 0; 
-    private static String name_mk2WheelKI = "MK2 Wheel kI";
-    public static double mk2WheelKI = 0.0001;
-    private static String name_mk2WheelKD = "MK2 Wheel kD";
-    public static double mk2WheelKD = 0;
-    private static String name_mk2WheelKF = "MK2 Wheel kF";
-    public static double mk2WheelKF = .08;
-    private static String name_mk2WheelIZone = "MK2 Wheel IZone";
-    public static double mk2WheelIZone = 2;
-    private static String name_mk2WheelIMax = "MK2 Wheel IMax";
-    public static double mk2WheelIMax = .2;
-    private static String name_mk2WheelRamp = "MK2 Wheel Ramp";
-    public static double mk2WheelRamp = .05;
-
-    // PID constants for the MK2 azimuth controller using the Spark Max's "Smart Motion" 
-    // trapezoidal motion profiling
-    // Configured through Preferences
-    private static String name_mk2AzimuthKP = "MK2 Azimuth kP";
-    public static double mk2AzimuthKP = 0.001; 
-    private static String name_mk2AzimuthKI = "MK2 Azimuth kI";
-    public static double mk2AzimuthKI = 0.00000;
-    private static String name_mk2AzimuthKD = "MK2 Azimuth kD";
-    public static double mk2AzimuthKD = 0;
-    private static String name_mk2AzimuthRamp = "MK2 Azimuth Ramp";
-    public static double mk2AzimuthRamp = 0;
+    private static String name_motorBKP = "Motor B kP";
+    public static double motorBKP = 0;
+    private static String name_motorBKI = "Motor B kI";
+    public static double motorBKI = 0;
+    private static String name_motorBKD = "Motor B kD";
+    public static double motorBKD = 0;
+    private static String name_motorBKF = "Motor B kF";
+    public static double motorBKF = 0;
+    private static String name_motorBIZone = "Motor B IZone";
+    public static double motorBIZone = 0;
+    private static String name_motorBIMax = "Motor B IMax";
+    public static double motorBIMax = 0;
+    private static String name_motorBRamp = "Motor B Ramp";
+    public static double motorBRamp = 0;
 
     // Initialize all of the preferences
     public static void init() {
-        initializeDoublePreference(name_mk2WheelKP, mk2WheelKP);
-        initializeDoublePreference(name_mk2WheelKI, mk2WheelKI);
-        initializeDoublePreference(name_mk2WheelKD, mk2WheelKD);
-        initializeDoublePreference(name_mk2WheelKF, mk2WheelKF);
-        initializeDoublePreference(name_mk2WheelIZone, mk2WheelIZone);
-        initializeDoublePreference(name_mk2WheelIMax, mk2WheelIMax);
-        initializeDoublePreference(name_mk2WheelRamp, mk2WheelRamp);
+        initializeDoublePreference(name_motorAKP, motorAKP);
+        initializeDoublePreference(name_motorAKI, motorAKI);
+        initializeDoublePreference(name_motorAKD, motorAKD);
+        initializeDoublePreference(name_motorAKF, motorAKF);
+        initializeDoublePreference(name_motorAIZone, motorAIZone);
+        initializeDoublePreference(name_motorAIMax, motorAIMax);
+        initializeDoublePreference(name_motorARamp, motorARamp);
 
-        initializeDoublePreference(name_mk2AzimuthKP, mk2AzimuthKP);
-        initializeDoublePreference(name_mk2AzimuthKI, mk2AzimuthKI);
-        initializeDoublePreference(name_mk2AzimuthKD, mk2AzimuthKD);
-        initializeDoublePreference(name_mk2AzimuthRamp, mk2AzimuthRamp);
+        initializeDoublePreference(name_motorBKP, motorBKP);
+        initializeDoublePreference(name_motorBKI, motorBKI);
+        initializeDoublePreference(name_motorBKD, motorBKD);
+        initializeDoublePreference(name_motorBKF, motorBKF);
+        initializeDoublePreference(name_motorBIZone, motorBIZone);
+        initializeDoublePreference(name_motorBIMax, motorBIMax);
+        initializeDoublePreference(name_motorBRamp, motorBRamp);
     }
 
     public static void updatePreferences() {
-        mk2WheelKP = updateDoublePreference(name_mk2WheelKP, mk2WheelKP);
-        mk2WheelKI = updateDoublePreference(name_mk2WheelKI, mk2WheelKI);
-        mk2WheelKD = updateDoublePreference(name_mk2WheelKD, mk2WheelKD);
-        mk2WheelKF = updateDoublePreference(name_mk2WheelKF, mk2WheelKF);
-        mk2WheelIZone = updateDoublePreference(name_mk2WheelIZone, mk2WheelIZone);
-        mk2WheelIMax = updateDoublePreference(name_mk2WheelIMax, mk2WheelIMax);
-        mk2WheelRamp = updateDoublePreference(name_mk2WheelRamp, mk2WheelRamp);
+        motorAKP = updateDoublePreference(name_motorAKP, motorAKP);
+        motorAKI = updateDoublePreference(name_motorAKI, motorAKI);
+        motorAKD = updateDoublePreference(name_motorAKD, motorAKD);
+        motorAKF = updateDoublePreference(name_motorAKF, motorAKF);
+        motorAIZone = updateDoublePreference(name_motorAIZone, motorAIZone);
+        motorAIMax = updateDoublePreference(name_motorAIMax, motorAIMax);
+        motorARamp = updateDoublePreference(name_motorARamp, motorARamp);
 
-        mk2AzimuthKP = updateDoublePreference(name_mk2AzimuthKP, mk2AzimuthKP);
-        mk2AzimuthKI = updateDoublePreference(name_mk2AzimuthKI, mk2AzimuthKI);
-        mk2AzimuthKD = updateDoublePreference(name_mk2AzimuthKD, mk2AzimuthKD);
-        mk2AzimuthRamp = updateDoublePreference(name_mk2AzimuthRamp, mk2AzimuthRamp);
+        motorBKP = updateDoublePreference(name_motorBKP, motorBKP);
+        motorBKI = updateDoublePreference(name_motorBKI, motorBKI);
+        motorBKD = updateDoublePreference(name_motorBKD, motorBKD);
+        motorBKF = updateDoublePreference(name_motorBKF, motorBKF);
+        motorBIZone = updateDoublePreference(name_motorBIZone, motorBIZone);
+        motorBIMax = updateDoublePreference(name_motorBIMax, motorBIMax);
+        motorBRamp = updateDoublePreference(name_motorBRamp, motorBRamp);
     }
 
     private static void initializeDoublePreference(String name, double defaultValue) {

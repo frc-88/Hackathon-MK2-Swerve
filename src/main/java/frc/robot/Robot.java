@@ -11,9 +11,8 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.swervemodule.MK2SwerveModule;
+import frc.robot.swervemodule.JoeSwerveModule;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,31 +22,26 @@ import frc.robot.swervemodule.MK2SwerveModule;
  * project.
  */
 public class Robot extends IterativeRobot {
-  private static final int FRONT_RIGHT_WHEEL_MOTOR_ID = 1;
-  private static final int FRONT_RIGHT_AZIMUTH_MOTOR_ID = 16;
+  private static final int FRONT_RIGHT_MOTOR_A_ID = 1;
+  private static final int FRONT_RIGHT_MOTOR_B_ID = 16;
   private static final int FRONT_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID = 0;
 
-  private static final int FRONT_LEFT_WHEEL_MOTOR_ID = 3;
-  private static final int FRONT_LEFT_AZIMUTH_MOTOR_ID = 2;
+  private static final int FRONT_LEFT_MOTOR_A_ID = 3;
+  private static final int FRONT_LEFT_MOTOR_B_ID = 2;
   private static final int FRONT_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID = 1;
 
-  private static final int BACK_LEFT_WHEEL_MOTOR_ID = 13;
-  private static final int BACK_LEFT_AZIMUTH_MOTOR_ID = 12;
+  private static final int BACK_LEFT_MOTOR_A_ID = 13;
+  private static final int BACK_LEFT_MOTOR_B_ID = 12;
   private static final int BACK_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID = 2;
 
-  private static final int BACK_RIGHT_WHEEL_MOTOR_ID = 15;
-  private static final int BACK_RIGHT_AZIMUTH_MOTOR_ID = 14;
+  private static final int BACK_RIGHT_MOTOR_A_ID = 15;
+  private static final int BACK_RIGHT_MOTOR_B_ID = 14;
   private static final int BACK_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID = 3;
 
-  private static final double FRONT_RIGHT_AZIMUTH_OFFSET = -178.3;
-  private static final double FRONT_LEFT_AZIMUTH_OFFSET = -179.6;
-  private static final double BACK_LEFT_AZIMUTH_OFFSET = 174.8;
-  private static final double BACK_RIGHT_AZIMUTH_OFFSET = -178.0;
-
-  MK2SwerveModule frontRightModule;
-  MK2SwerveModule frontLeftModule;
-  MK2SwerveModule backLeftModule;
-  MK2SwerveModule backRightModule;
+  JoeSwerveModule frontRightModule;
+  JoeSwerveModule frontLeftModule;
+  JoeSwerveModule backLeftModule;
+  JoeSwerveModule backRightModule;
 
   AHRS navX;
 
@@ -63,27 +57,17 @@ public class Robot extends IterativeRobot {
     Constants.init();
     Constants.updatePreferences();
 
-    frontRightModule = new MK2SwerveModule(FRONT_RIGHT_WHEEL_MOTOR_ID, FRONT_RIGHT_AZIMUTH_MOTOR_ID,
+    frontRightModule = new JoeSwerveModule(FRONT_RIGHT_MOTOR_A_ID, FRONT_RIGHT_MOTOR_B_ID,
         FRONT_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID);
-    frontRightModule.setAzimuthOffset(FRONT_RIGHT_AZIMUTH_OFFSET);
-    frontLeftModule = new MK2SwerveModule(FRONT_LEFT_WHEEL_MOTOR_ID, FRONT_LEFT_AZIMUTH_MOTOR_ID,
+    frontLeftModule = new JoeSwerveModule(FRONT_LEFT_MOTOR_A_ID, FRONT_LEFT_MOTOR_B_ID,
         FRONT_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID);
-    frontLeftModule.setAzimuthOffset(FRONT_LEFT_AZIMUTH_OFFSET);
-    backLeftModule = new MK2SwerveModule(BACK_LEFT_WHEEL_MOTOR_ID, BACK_LEFT_AZIMUTH_MOTOR_ID,
+    backLeftModule = new JoeSwerveModule(BACK_LEFT_MOTOR_A_ID, BACK_LEFT_MOTOR_B_ID,
         BACK_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID);
-    backLeftModule.setAzimuthOffset(BACK_LEFT_AZIMUTH_OFFSET);
-    backRightModule = new MK2SwerveModule(BACK_RIGHT_WHEEL_MOTOR_ID, BACK_RIGHT_AZIMUTH_MOTOR_ID,
+    backRightModule = new JoeSwerveModule(BACK_RIGHT_MOTOR_A_ID, BACK_RIGHT_MOTOR_B_ID,
         BACK_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID);
-    backRightModule.setAzimuthOffset(BACK_RIGHT_AZIMUTH_OFFSET);
 
     navX = new AHRS(Port.kOnboard);
     navX.zeroYaw();
-
-    SmartDashboard.putBoolean("EnableAzimuthVelocityMode", false);
-    SmartDashboard.putNumber("CommandFrontRightAzimuthVel", 0);
-    SmartDashboard.putNumber("CommandFrontLeftAzimuthVel", 0);
-    SmartDashboard.putNumber("CommandBackLeftAzimuthVel", 0);
-    SmartDashboard.putNumber("CommandBackRightAzimuthVel", 0);
 
     oi = new OI();
   }
@@ -99,9 +83,6 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void robotPeriodic() {
-
-    Constants.updatePreferences();
-
     SmartDashboard.putNumber("FrontRightAzimuthVel", frontRightModule.getAzimuthVelocity());
     SmartDashboard.putNumber("FrontLeftAzimuthVel", frontLeftModule.getAzimuthVelocity());
     SmartDashboard.putNumber("BackLeftAzimuthVel", backLeftModule.getAzimuthVelocity());
@@ -116,8 +97,10 @@ public class Robot extends IterativeRobot {
     SmartDashboard.putNumber("Back Right Speed", backRightModule.getSpeed());
     SmartDashboard.putNumber("Back Right Azimuth", backRightModule.getAzimuth());
 
-    SmartDashboard.putNumber("NavX Yaw", -navX.getYaw());
+    SmartDashboard.putNumber("FrontRightMotorAVel", frontRightModule.getMotorAVelocity());
+    SmartDashboard.putNumber("FrontRightMotorBVel", frontRightModule.getMotorBVelocity());
 
+    SmartDashboard.putNumber("NavX Yaw", -navX.getYaw());
   }
 
   /**
@@ -146,10 +129,12 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void teleopInit() {
-    frontRightModule.calibrateAzimuth();
-    frontLeftModule.calibrateAzimuth();
-    backLeftModule.calibrateAzimuth();
-    backRightModule.calibrateAzimuth();
+    Constants.updatePreferences();
+
+    frontRightModule.configureFromPreferences();
+    frontLeftModule.configureFromPreferences();
+    backLeftModule.configureFromPreferences();
+    backRightModule.configureFromPreferences();
   }
 
   /**
@@ -157,23 +142,13 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void teleopPeriodic() {
+    var speed = oi.getSpeed();
+    var azimuth = oi.getAzimuth();
 
-    if (SmartDashboard.getBoolean("EnableAzimuthVelocityMode", false)) {
-
-      frontRightModule.setAngularVelocity(SmartDashboard.getNumber("CommandFrontRightAzimuthVel", 0));
-      frontLeftModule.setAngularVelocity(SmartDashboard.getNumber("CommandFrontLeftAzimuthVel", 0));
-      backLeftModule.setAngularVelocity(SmartDashboard.getNumber("CommandBackLeftAzimuthVel", 0));
-      backRightModule.setAngularVelocity(SmartDashboard.getNumber("CommandBackRightAzimuthVel", 0));
-
-    } else {
-      var speed = oi.getSpeed();
-      var azimuth = oi.getAzimuth();
-
-      frontRightModule.set(speed, azimuth);
-      frontLeftModule.set(speed, azimuth);
-      backRightModule.set(speed, azimuth);
-      backLeftModule.set(speed, azimuth);
-    }
+    frontRightModule.set(speed, azimuth);
+    frontLeftModule.set(speed, azimuth);
+    backRightModule.set(speed, azimuth);
+    backLeftModule.set(speed, azimuth);
   }
 
   /**
