@@ -166,15 +166,9 @@ public class Robot extends IterativeRobot {
       backRightModule.setAngularVelocity(SmartDashboard.getNumber("CommandBackRightAzimuthVel", 0));
 
     } else {
-      double speed = oi.getSpeed();
-      double azimuth = oi.getAzimuth();
 
+      
 
-
-      frontRightModule.set(speed, azimuth);
-      frontLeftModule.set(speed, azimuth);
-      backRightModule.set(speed, azimuth);
-      backLeftModule.set(speed, azimuth);
     }
   }
 

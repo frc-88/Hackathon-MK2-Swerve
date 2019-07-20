@@ -100,30 +100,30 @@ public class MK2SwerveModule implements SwerveModule {
     }
 
     @Override
-    public void set(double wheelSpeed, double azimuth) {
+    public void set(double wheelSpeed, double azimuthSpeed) {
 
-        // // Set the wheel angle to the closest multiple of 180
-        double currentAzimuth = azimuthEncoder.getPosition();
-        double targetAzimuth = azimuth % 180;
-        while (Math.abs(targetAzimuth - currentAzimuth) > 90) {
-            if (targetAzimuth < currentAzimuth) {
-                targetAzimuth += 180;
-            } else {
-                targetAzimuth -= 180;
-            }
-        }
-        if (Math.abs(MathUtils.getReferenceAngle(azimuth) - MathUtils.getReferenceAngle(targetAzimuth)) > 90) {
-            wheelSpeed = -wheelSpeed;
-        }
-
+        // Set the wheel angle to the closest multiple of 180
 
         // Set the wheel speed
         wheelSpeedPID.setReference(wheelSpeed, ControlType.kVelocity);
 
         // Set the azimuth
-        azimuthPID.setReference(targetAzimuth, ControlType.kPosition);
+        //azimuthPID.setReference(targetAzimuth, ControlType.kPosition);
                 
     }
+
+    // double currentAzimuth = azimuthEncoder.getPosition();
+    //     double targetAzimuth = azimuth % 180;
+    //     while (Math.abs(targetAzimuth - currentAzimuth) > 90) {
+    //         if (targetAzimuth < currentAzimuth) {
+    //             targetAzimuth += 180;
+    //         } else {
+    //             targetAzimuth -= 180;
+    //         }
+    //     }
+    //     if (Math.abs(MathUtils.getReferenceAngle(azimuth) - MathUtils.getReferenceAngle(targetAzimuth)) > 90) {
+    //         wheelSpeed = -wheelSpeed;
+    //     }
 
     @Override
     public double getSpeed() {
@@ -158,6 +158,4 @@ public class MK2SwerveModule implements SwerveModule {
     public void setAngularVelocity(double velocity) {
         azimuthPID.setReference(velocity, ControlType.kVelocity);
     }
-
-
 }

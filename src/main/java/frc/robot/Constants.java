@@ -38,6 +38,15 @@ public class Constants {
     private static String name_mk2AzimuthRamp = "MK2 Azimuth Ramp";
     public static double mk2AzimuthRamp = 0;
 
+    // Acceleration limits
+    private static String name_linearAccelLimit = "Linear Accel";
+    public static double linearAccelLimit = 12;
+    private static String name_translationAngularAccelLimit = "Translate Angular Accel";
+    public static double translationAngularAccelLimit = 180;
+    private static String name_headingAngularAccelLimit = "Heading Angular Accel";
+    public static double headingAngularAccelLimit = 180;
+    
+
     // Initialize all of the preferences
     public static void init() {
         initializeDoublePreference(name_mk2WheelKP, mk2WheelKP);
@@ -52,6 +61,10 @@ public class Constants {
         initializeDoublePreference(name_mk2AzimuthKI, mk2AzimuthKI);
         initializeDoublePreference(name_mk2AzimuthKD, mk2AzimuthKD);
         initializeDoublePreference(name_mk2AzimuthRamp, mk2AzimuthRamp);
+
+        initializeDoublePreference(name_linearAccelLimit, linearAccelLimit);
+        initializeDoublePreference(name_translationAngularAccelLimit, translationAngularAccelLimit);
+        initializeDoublePreference(name_headingAngularAccelLimit, headingAngularAccelLimit);
     }
 
     public static void updatePreferences() {
@@ -67,6 +80,10 @@ public class Constants {
         mk2AzimuthKI = updateDoublePreference(name_mk2AzimuthKI, mk2AzimuthKI);
         mk2AzimuthKD = updateDoublePreference(name_mk2AzimuthKD, mk2AzimuthKD);
         mk2AzimuthRamp = updateDoublePreference(name_mk2AzimuthRamp, mk2AzimuthRamp);
+
+        linearAccelLimit = updateDoublePreference(name_linearAccelLimit, linearAccelLimit);
+        translationAngularAccelLimit = updateDoublePreference(name_translationAngularAccelLimit, translationAngularAccelLimit);
+        headingAngularAccelLimit = updateDoublePreference(name_headingAngularAccelLimit, headingAngularAccelLimit);
     }
 
     private static void initializeDoublePreference(String name, double defaultValue) {
