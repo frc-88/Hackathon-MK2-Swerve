@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.ConfigParameter;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants;
+import frc.robot.util.TJPIDController;
 
 public class JoeSwerveModule implements SwerveModule {
     // Hardware device objects
@@ -22,6 +23,8 @@ public class JoeSwerveModule implements SwerveModule {
     private CANPIDController speedPidB;
     CANifier canifier;
 
+    TJPIDController azimuthPid;
+
     /** Azimuth encoder value when the module is pointing forwards, [0-1) */
     private double azimuthOffset = 0.0;
     private PWMChannel azimuthAbsoluteEncoder;
@@ -29,6 +32,7 @@ public class JoeSwerveModule implements SwerveModule {
     public JoeSwerveModule(int motorAId, int motorBId, CANifier canifier, PWMChannel azimuthAbsoluteEncoder) {
         this.canifier = canifier;
         this.azimuthAbsoluteEncoder = azimuthAbsoluteEncoder;
+        azimuthPid = new TJPIDController(200, 0, 0);
 
         // Set up motor A
         motorA = new CANSparkMax(motorAId, MotorType.kBrushless);
@@ -65,9 +69,9 @@ public class JoeSwerveModule implements SwerveModule {
 
     @Override
     public void set(double wheelSpeed, double azimuth) {
-        // TODO: right now this interprets azimuth as azimuth velocity!!
-        double velocityB = 3.33 * wheelSpeed - 33.3 * azimuth;
-        double velocityA = 66.6 * azimuth + velocityB;
+        double azimuthVel = azimuthPid.calculateOutput(getAzimuth(), azimuth);
+        double velocityB = 3.33 * wheelSpeed - 33.3 * azimuthVel;
+        double velocityA = 66.6 * azimuthVel + velocityB;
         setMotors(velocityA, velocityB);
     }
 
@@ -88,7 +92,7 @@ public class JoeSwerveModule implements SwerveModule {
         while (azimuth >= 1.0) {
             azimuth -= 1;
         }
-        return azimuth;
+        return 1 - azimuth;
     }
 
     @Override

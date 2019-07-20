@@ -11,13 +11,13 @@ public class OI {
     }
 
     public double getAzimuth() {
-        // TODO: this scale is completely made up.
-        return controller.getRawAxis(0) * 20;
+        // [0, 1)
+        return controller.getRawAxis(0) / 2 + 0.5;
     }
 
     public double getSpeed() {
         // TODO: this scale is completely made up.
-        return controller.getRawAxis(5) * 200;
+        return (controller.getRawAxis(5) * 300);
     }
 
     public boolean motorAActive() {

@@ -40,10 +40,10 @@ public class Robot extends IterativeRobot {
   private static final int BACK_RIGHT_MOTOR_B_ID = 14;
   private static final PWMChannel BACK_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID = PWMChannel.PWMChannel3;
 
-  private static final double FRONT_RIGHT_ZERO_AZIMUTH = 0.13;
-  private static final double FRONT_LEFT_ZERO_AZIMUTH = 0.00;
-  private static final double BACK_RIGHT_ZERO_AZIMUTH = 0.05;
-  private static final double BACK_LEFT_ZERO_AZIMUTH = 0.45;
+  private static final double FRONT_RIGHT_ZERO_AZIMUTH = 0.63;
+  private static final double FRONT_LEFT_ZERO_AZIMUTH = 0.50;
+  private static final double BACK_RIGHT_ZERO_AZIMUTH = 0.55;
+  private static final double BACK_LEFT_ZERO_AZIMUTH = 0.95;
 
   public static final int CANIFIER_ID = 22;
 
@@ -161,18 +161,23 @@ public class Robot extends IterativeRobot {
     var speed = oi.getSpeed();
     var azimuth = oi.getAzimuth();
 
-    if (oi.motorAActive()) {
-      frontRightModule.set(speed, azimuth);
-    }
-    if (oi.motorBActive()) {
-      frontLeftModule.set(speed, azimuth);
-    }
-    if (oi.motorCActive()) {
-      backRightModule.set(speed, azimuth);
-    }
-    if (oi.motorDActive()) {
-      backLeftModule.set(speed, azimuth);
-    }
+    // if (oi.motorAActive()) {
+    // frontRightModule.set(speed, azimuth);
+    // }
+    // if (oi.motorBActive()) {
+    // frontLeftModule.set(speed, azimuth);
+    // }
+    // if (oi.motorCActive()) {
+    // backRightModule.set(speed, azimuth);
+    // }
+    // if (oi.motorDActive()) {
+    // backLeftModule.set(speed, azimuth);
+    // }
+
+    frontRightModule.set(speed, azimuth);
+    frontLeftModule.set(speed, azimuth);
+    backRightModule.set(speed, azimuth);
+    backLeftModule.set(speed, azimuth);
   }
 
   /**
