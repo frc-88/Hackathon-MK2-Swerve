@@ -17,4 +17,8 @@ public class OI {
     public double getSpeed() {
         return Math.pow(controller.getMagnitude(), 3) * 12;
     }
+
+    public double getRotation() {
+        return Math.pow(controller.getRawAxis(4), 3) * 800;
+    }
 }

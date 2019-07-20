@@ -68,7 +68,7 @@ public class MK2SwerveModule implements SwerveModule {
         wheelSpeedPID.setD(Constants.mk2WheelKD);
         wheelSpeedPID.setFF(Constants.mk2WheelKF);
         wheelSpeedPID.setIZone(Constants.mk2WheelIZone);
-        wheelSpeedPID.setIAccum(Constants.mk2WheelIMax);
+        wheelSpeedPID.setIMaxAccum(Constants.mk2WheelIMax, 0);
 
         // Set up azimute motor
         azimuthMotor = new CANSparkMax(azimuthMotorId, MotorType.kBrushless);
@@ -101,11 +101,28 @@ public class MK2SwerveModule implements SwerveModule {
     @Override
     public void set(double wheelSpeed, double azimuth) {
 
+        // // Set the wheel angle to the closest multiple of 180
+        double currentAzimuth = azimuthEncoder.getPosition();
+        double targetAzimuth = azimuth % 180;
+        boolean flipSpeed = (Math.abs(azimuth - 180) < .001) || (Math.abs(azimuth + 180) < .001);
+        while (Math.abs(targetAzimuth - currentAzimuth) > 90) {
+            if (targetAzimuth < currentAzimuth) {
+                targetAzimuth += 180;
+            } else {
+                targetAzimuth -= 180;
+            }
+            flipSpeed = !flipSpeed;
+        }
+        if (flipSpeed) {
+            wheelSpeed = -wheelSpeed;
+        }
+
+
         // Set the wheel speed
         wheelSpeedPID.setReference(wheelSpeed, ControlType.kVelocity);
 
         // Set the azimuth
-        azimuthPID.setReference(azimuth, ControlType.kPosition);
+        azimuthPID.setReference(targetAzimuth, ControlType.kPosition);
                 
     }
 

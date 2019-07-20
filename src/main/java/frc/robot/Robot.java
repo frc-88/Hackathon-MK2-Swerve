@@ -166,8 +166,10 @@ public class Robot extends IterativeRobot {
       backRightModule.setAngularVelocity(SmartDashboard.getNumber("CommandBackRightAzimuthVel", 0));
 
     } else {
-      var speed = oi.getSpeed();
-      var azimuth = oi.getAzimuth();
+      double speed = oi.getSpeed();
+      double azimuth = oi.getAzimuth();
+
+
 
       frontRightModule.set(speed, azimuth);
       frontLeftModule.set(speed, azimuth);
@@ -175,6 +177,26 @@ public class Robot extends IterativeRobot {
       backLeftModule.set(speed, azimuth);
     }
   }
+
+  public static double[] calculateSwerveModuleAngles(double forward, double strafe, double rotation) {
+
+    double WHEELBASE = 28;
+    double TRACKWIDTH = 26;
+
+    rotation = Math.toRadians(rotation);
+
+    double a = strafe - rotation * (WHEELBASE / TRACKWIDTH);
+    double b = strafe + rotation * (WHEELBASE / TRACKWIDTH);
+    double c = forward - rotation * (TRACKWIDTH / WHEELBASE);
+    double d = forward + rotation * (TRACKWIDTH / WHEELBASE);
+
+    return new double[]{
+            Math.atan2(b, c) * 180 / Math.PI,
+            Math.atan2(b, d) * 180 / Math.PI,
+            Math.atan2(a, d) * 180 / Math.PI,
+            Math.atan2(a, c) * 180 / Math.PI
+    };
+}
 
   /**
    * This function is called periodically during test mode.
