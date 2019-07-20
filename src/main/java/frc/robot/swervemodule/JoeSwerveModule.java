@@ -1,5 +1,7 @@
 package frc.robot.swervemodule;
 
+import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix.CANifier.PWMChannel;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -8,7 +10,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.ConfigParameter;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.Constants;
 
 public class JoeSwerveModule implements SwerveModule {
@@ -17,11 +18,18 @@ public class JoeSwerveModule implements SwerveModule {
     private CANEncoder encoderA;
     private CANSparkMax motorB;
     private CANEncoder encoderB;
-    private AnalogInput azimuthAbsoluteSensor;
     private CANPIDController speedPidA;
     private CANPIDController speedPidB;
+    CANifier canifier;
 
-    public JoeSwerveModule(int motorAId, int motorBId, int azimuthAbsoluteSensorId) {
+    /** Azimuth encoder value when the module is pointing forwards, [0-1) */
+    private double azimuthOffset = 0.0;
+    private PWMChannel azimuthAbsoluteEncoder;
+
+    public JoeSwerveModule(int motorAId, int motorBId, CANifier canifier, PWMChannel azimuthAbsoluteEncoder) {
+        this.canifier = canifier;
+        this.azimuthAbsoluteEncoder = azimuthAbsoluteEncoder;
+
         // Set up motor A
         motorA = new CANSparkMax(motorAId, MotorType.kBrushless);
         motorA.setIdleMode(IdleMode.kBrake);
@@ -51,32 +59,49 @@ public class JoeSwerveModule implements SwerveModule {
         speedPidB.setIZone(Constants.motorBIZone);
     }
 
+    public void setAzimuthOffset(double azimuthOffset) {
+        this.azimuthOffset = azimuthOffset;
+    }
+
     @Override
     public void set(double wheelSpeed, double azimuth) {
         // TODO: right now this interprets azimuth as azimuth velocity!!
-        double speedB = 3.33 * wheelSpeed - 33.3 * azimuth;
-        double speedA = 66.6 * azimuth + speedB;
-
-        speedPidA.setReference(speedA, ControlType.kVelocity);
-        speedPidB.setReference(speedB, ControlType.kVelocity);
+        double velocityB = 3.33 * wheelSpeed - 33.3 * azimuth;
+        double velocityA = 66.6 * azimuth + velocityB;
+        setMotors(velocityA, velocityB);
     }
 
     @Override
     public double getSpeed() {
-        // TODO: haha
-        return 0;
+        return wheelVelocityFromMotors(getMotorAVelocity(), getMotorBVelocity());
     }
 
     @Override
     public double getAzimuth() {
-        // TODO: haha
-        return 0;
+        double[] pwmIn = new double[2];
+        canifier.getPWMInput(azimuthAbsoluteEncoder, pwmIn);
+        double azimuth = pwmIn[0] / pwmIn[1];
+        azimuth -= azimuthOffset;
+        while (azimuth < 0) {
+            azimuth += 1;
+        }
+        while (azimuth >= 1.0) {
+            azimuth -= 1;
+        }
+        return azimuth;
     }
 
     @Override
     public double getAzimuthVelocity() {
-        // TODO: haha
-        return 0;
+        return azimuthVelocityFromMotors(getMotorAVelocity(), getMotorBVelocity());
+    }
+
+    public static double wheelVelocityFromMotors(double velocityA, double velocityB) {
+        return (velocityA + velocityB) / 6.66;
+    }
+
+    public static double azimuthVelocityFromMotors(double velocityA, double velocityB) {
+        return (velocityA - velocityB) / 66.6;
     }
 
     public double getMotorAVelocity() {
@@ -87,11 +112,8 @@ public class JoeSwerveModule implements SwerveModule {
         return encoderB.getVelocity();
     }
 
-    public void setMotorA(double speed) {
-        speedPidA.setReference(speed, ControlType.kVelocity);
-    }
-
-    public void setMotorB(double speed) {
-        speedPidB.setReference(speed, ControlType.kVelocity);
+    public void setMotors(double velocityA, double velocityB) {
+        speedPidA.setReference(velocityA, ControlType.kVelocity);
+        speedPidB.setReference(velocityB, ControlType.kVelocity);
     }
 }

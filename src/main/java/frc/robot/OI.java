@@ -19,4 +19,20 @@ public class OI {
         // TODO: this scale is completely made up.
         return controller.getRawAxis(5) * 200;
     }
+
+    public boolean motorAActive() {
+        return controller.getRawButton(1);
+    }
+
+    public boolean motorBActive() {
+        return controller.getRawButton(2);
+    }
+
+    public boolean motorCActive() {
+        return controller.getRawButton(3);
+    }
+
+    public boolean motorDActive() {
+        return controller.getRawButton(4);
+    }
 }

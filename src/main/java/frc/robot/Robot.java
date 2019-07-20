@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix.CANifier.PWMChannel;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -24,19 +26,26 @@ import frc.robot.swervemodule.JoeSwerveModule;
 public class Robot extends IterativeRobot {
   private static final int FRONT_RIGHT_MOTOR_A_ID = 1;
   private static final int FRONT_RIGHT_MOTOR_B_ID = 16;
-  private static final int FRONT_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID = 0;
+  private static final PWMChannel FRONT_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID = PWMChannel.PWMChannel0;
 
   private static final int FRONT_LEFT_MOTOR_A_ID = 3;
   private static final int FRONT_LEFT_MOTOR_B_ID = 2;
-  private static final int FRONT_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID = 1;
+  private static final PWMChannel FRONT_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID = PWMChannel.PWMChannel1;
 
   private static final int BACK_LEFT_MOTOR_A_ID = 13;
   private static final int BACK_LEFT_MOTOR_B_ID = 12;
-  private static final int BACK_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID = 2;
+  private static final PWMChannel BACK_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID = PWMChannel.PWMChannel2;
 
   private static final int BACK_RIGHT_MOTOR_A_ID = 15;
   private static final int BACK_RIGHT_MOTOR_B_ID = 14;
-  private static final int BACK_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID = 3;
+  private static final PWMChannel BACK_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID = PWMChannel.PWMChannel3;
+
+  private static final double FRONT_RIGHT_ZERO_AZIMUTH = 0.13;
+  private static final double FRONT_LEFT_ZERO_AZIMUTH = 0.00;
+  private static final double BACK_RIGHT_ZERO_AZIMUTH = 0.05;
+  private static final double BACK_LEFT_ZERO_AZIMUTH = 0.45;
+
+  public static final int CANIFIER_ID = 22;
 
   JoeSwerveModule frontRightModule;
   JoeSwerveModule frontLeftModule;
@@ -44,6 +53,8 @@ public class Robot extends IterativeRobot {
   JoeSwerveModule backRightModule;
 
   AHRS navX;
+
+  CANifier canifier;
 
   public static OI oi;
 
@@ -53,18 +64,23 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void robotInit() {
-
     Constants.init();
     Constants.updatePreferences();
 
-    frontRightModule = new JoeSwerveModule(FRONT_RIGHT_MOTOR_A_ID, FRONT_RIGHT_MOTOR_B_ID,
+    canifier = new CANifier(CANIFIER_ID);
+
+    frontRightModule = new JoeSwerveModule(FRONT_RIGHT_MOTOR_A_ID, FRONT_RIGHT_MOTOR_B_ID, canifier,
         FRONT_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID);
-    frontLeftModule = new JoeSwerveModule(FRONT_LEFT_MOTOR_A_ID, FRONT_LEFT_MOTOR_B_ID,
+    frontRightModule.setAzimuthOffset(FRONT_RIGHT_ZERO_AZIMUTH);
+    frontLeftModule = new JoeSwerveModule(FRONT_LEFT_MOTOR_A_ID, FRONT_LEFT_MOTOR_B_ID, canifier,
         FRONT_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID);
-    backLeftModule = new JoeSwerveModule(BACK_LEFT_MOTOR_A_ID, BACK_LEFT_MOTOR_B_ID,
+    frontLeftModule.setAzimuthOffset(FRONT_LEFT_ZERO_AZIMUTH);
+    backLeftModule = new JoeSwerveModule(BACK_LEFT_MOTOR_A_ID, BACK_LEFT_MOTOR_B_ID, canifier,
         BACK_LEFT_AZIMUTH_ABSOLUTE_SENSOR_ID);
-    backRightModule = new JoeSwerveModule(BACK_RIGHT_MOTOR_A_ID, BACK_RIGHT_MOTOR_B_ID,
+    backLeftModule.setAzimuthOffset(BACK_LEFT_ZERO_AZIMUTH);
+    backRightModule = new JoeSwerveModule(BACK_RIGHT_MOTOR_A_ID, BACK_RIGHT_MOTOR_B_ID, canifier,
         BACK_RIGHT_AZIMUTH_ABSOLUTE_SENSOR_ID);
+    backRightModule.setAzimuthOffset(BACK_RIGHT_ZERO_AZIMUTH);
 
     navX = new AHRS(Port.kOnboard);
     navX.zeroYaw();
@@ -145,10 +161,18 @@ public class Robot extends IterativeRobot {
     var speed = oi.getSpeed();
     var azimuth = oi.getAzimuth();
 
-    frontRightModule.set(speed, azimuth);
-    frontLeftModule.set(speed, azimuth);
-    backRightModule.set(speed, azimuth);
-    backLeftModule.set(speed, azimuth);
+    if (oi.motorAActive()) {
+      frontRightModule.set(speed, azimuth);
+    }
+    if (oi.motorBActive()) {
+      frontLeftModule.set(speed, azimuth);
+    }
+    if (oi.motorCActive()) {
+      backRightModule.set(speed, azimuth);
+    }
+    if (oi.motorDActive()) {
+      backLeftModule.set(speed, azimuth);
+    }
   }
 
   /**
