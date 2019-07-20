@@ -30,7 +30,8 @@ public abstract class SwerveChassis {
             double yVelocity, double rotationalVelocity) {
 
         desiredState = new VelocitySwerveState(
-            Vector2D.createCartesianCoordinates(xVelocity, yVelocity), rotationalVelocity);
+            Vector2D.createCartesianCoordinates(xVelocity, yVelocity), rotationalVelocity)
+            .rotateFrame(-SwerveTelemetry.getInstance().getIMUHeading());
 
     }
 
@@ -38,8 +39,7 @@ public abstract class SwerveChassis {
             double yVelocity, double rotationalVelocity) {
 
         desiredState = new VelocitySwerveState(
-            Vector2D.createCartesianCoordinates(xVelocity, yVelocity), rotationalVelocity)
-            .rotateFrame(-SwerveTelemetry.getInstance().getIMUHeading());
+            Vector2D.createCartesianCoordinates(xVelocity, yVelocity), rotationalVelocity);
 
     }
 
