@@ -112,7 +112,7 @@ public class MK2SwerveModule implements SwerveModule {
                 targetAzimuth -= 180;
             }
         }
-        if (Math.abs(MathUtils.getReferenceAngle(azimuth) - MathUtils.getReferenceAngle(targetAzimuth)) > 90) {
+        if (Math.abs(MathUtils.getReferenceAngle(azimuth) - MathUtils.getReferenceAngle(targetAzimuth)) < 90) {
             wheelSpeed = -wheelSpeed;
         }
 

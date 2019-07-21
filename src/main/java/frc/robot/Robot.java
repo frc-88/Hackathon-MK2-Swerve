@@ -169,8 +169,6 @@ public class Robot extends IterativeRobot {
       double speed = oi.getSpeed();
       double azimuth = oi.getAzimuth();
 
-
-
       frontRightModule.set(speed, azimuth);
       frontLeftModule.set(speed, azimuth);
       backRightModule.set(speed, azimuth);
